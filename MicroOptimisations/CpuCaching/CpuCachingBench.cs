@@ -2,8 +2,8 @@ using BenchmarkDotNet.Attributes;
 
 namespace MicroOptimisations.CpuCaching
 {
-    [SimpleJob(launchCount: 1, warmupCount: 3, iterationCount: 5, invocationCount:1, id: "SingleJob")]
-    public class CacheLevelsBench
+    [SimpleJob(launchCount: 1, warmupCount: 3, iterationCount: 5, invocationCount:1, id: "CacheLineUpdatingBenchJob")]
+    public class CacheLineUpdatingBench
     {
         // Cache Lines Benchmark
         [Benchmark(Baseline = true)]
@@ -37,7 +37,7 @@ namespace MicroOptimisations.CpuCaching
         public void Size1024() => CacheLines.ModifyEveryKElement(1024);
     }
 
-    [SimpleJob(launchCount: 1, warmupCount: 3, iterationCount: 5, invocationCount:1, id: "SingleJob")]
+    [SimpleJob(launchCount: 1, warmupCount: 3, iterationCount: 5, invocationCount:1, id: "CacheLineFalseSharingBenchJob")]
     public class CacheLineFalseSharingBench
     {
         
@@ -85,8 +85,8 @@ namespace MicroOptimisations.CpuCaching
         }
     }
 
-    [SimpleJob(launchCount: 1, warmupCount: 3, iterationCount: 5, invocationCount:1, id: "SingleJob")]
-    public class CacheLineUpdatingBench
+    [SimpleJob(launchCount: 1, warmupCount: 3, iterationCount: 5, invocationCount:1, id: "CacheLevelsBenchJob")]
+    public class CacheLevelsBench 
     {
         
         [Benchmark(Baseline = true)] // 256 * 4b = 1kB
