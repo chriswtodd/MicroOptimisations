@@ -1,7 +1,4 @@
 ﻿using BenchmarkDotNet.Running;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 
 public class Program 
 {
@@ -18,16 +15,5 @@ public class Program
         var summaryCacheLineFalseSharing = BenchmarkRunner.Run<MicroOptimisations.CpuCaching.CacheLineFalseSharing>();
         var summaryCacheLineUpdatingBench = BenchmarkRunner.Run<MicroOptimisations.CpuCaching.CacheLineUpdatingBench>();
         var summaryLoops = BenchmarkRunner.Run<MicroOptimisations.Loops.Bench>();
-    }
-
-    public static void SerializerStuff() 
-    {
-        // var b = new BinarySerializerStrategy();
-        // var d = new DataContractSerializerStrategy();
-        // var p = new ProtoBufSerializationStrategy();
-
-        // b.Do();
-        // d.Do();
-        // p.Do();
     }
 }
