@@ -24,7 +24,7 @@ jobs:
           dotnet-version: '9.x'
           
       - name: Install dependencies
-        run: dotnet restore MircoOptimisations.sln
+        run: dotnet restore MicroOptimisations.sln
         
       - name: Build
-        run: dotnet build --no-restore MircoOptimisations.sln
+        run: dotnet build --no-restore MicroOptimisations.sln
