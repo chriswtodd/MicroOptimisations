@@ -57,7 +57,7 @@ faster and smaller. Knowing this, we can guess from the above what size each of 
 cache levels are from the large jumps between groups of times taken to perform an 
 operation.
 
-There are jumps between 32kb-64kb (~40% increase), and 4MB-8MB (~60), which are the 
+There are jumps between 32kb-64kb (~40% increase), and 4MB-8MB (~60% increase), which are the 
 sizes of the L1 and L2 caches on my machine.
 
 ## CPU Cache Lines
@@ -89,9 +89,17 @@ LaunchCount=1  UnrollFactor=1  WarmupCount=3
 | Size512  |  1,996.5 μs |   781.9 μs |   121.00 μs |  0.06 |    0.00 |
 | Size1024 |    788.3 μs |   324.1 μs |    84.16 μs |  0.02 |    0.00 |
 
-Cache lines are populated at particular sizes depending on the cache level. From above, 
-we see a drop in mean operation time at Size16 (or 16 ints), and can therefore derive the
-cache line sizes in this machine: 4 * 16 = 64 bytes.
+Caches are made up of cache lines, and these lines are particular sizes (usually 64 bytes).
+When information is read from main memory, they are read 64 bytes at a time and written to
+cache lines for faster access if a re-read is needed or continuous bits of data might be 
+related.
+
+Following the numbers from above, we see a drop in mean operation time at Size16 (or 16 
+ints), and can therefore derive the cache line sizes in this machine: 4 * 16 = 64 bytes, 
+as claimed.
 
 ## CPU False Sharing
 
+When information changes within a single cache line, the whole line is invalidated. When we 
+modify a value within a single cache line, *we invalidate the whole line*. When we modify 
+an element, we need to expel the cache and refresh the whole line.
