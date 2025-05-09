@@ -90,7 +90,9 @@ LaunchCount=1  UnrollFactor=1  WarmupCount=3
 | Size1024 |    788.3 μs |   324.1 μs |    84.16 μs |  0.02 |    0.00 |
 
 Caches are made up of cache lines, and these lines are particular sizes (usually 64 bytes).
-When information is read from main memory, they are read line by line (in 64 byte chucks). 
+When information is read from main memory, they are read 64 bytes at a time and written to
+cache lines for faster access if a re-read is needed or continuous bits of data might be 
+related.
 
 Following the numbers from above, we see a drop in mean operation time at Size16 (or 16 
 ints), and can therefore derive the cache line sizes in this machine: 4 * 16 = 64 bytes, 

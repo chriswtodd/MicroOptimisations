@@ -2,10 +2,10 @@
 
 Calling a method via another method is slower vs directly calling a method. This is 
 because it requires extra overhead when trying to call the next method. If you are 
-using a language with methods on objects, such as C# the it requires looking up the 
+using a language with methods on objects, such as C# then it requires looking up the 
 address of the class, then the method, then calling the final function. These lookups
 require journeys back to main memory to find objects, so they can increase a simple
-operations time.
+operations time to completion (string.Length in this example).
 
 ## Results
 

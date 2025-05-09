@@ -6,12 +6,13 @@ object, for example.
 
 This is largely because the stack is for short term items in memory, for the 
 scope of methods etc. The heap however stores objects and using the `new` 
-keyword in C# dynamically assigns memory on the stack (malloc c, new c++,
+keyword in C# dynamically assigns memory on the heap (malloc c, new c++,
 it goes on).
 
-Storing references on the stack to items on the heap prevents a lookup from the 
-heap (thats random or 'disorganised') and therefore increases the speed at 
-which we can perform operations, in a method for example.
+Storing references on the stack to items on the heap (e.g. with `ref`) 
+prevents a lookup from the heap (thats random or 'disorganised') and therefore
+increases the speed at which we can perform operations. This is demonstrated 
+by the last example `ClassReferencerWithParameterResult`.
 
 ## Results
 
