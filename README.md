@@ -1,4 +1,4 @@
-# MicroOptimisiations
+# MicroOptimisations
 
 When writing code in any programming language, to achieve the highest performance possible for a 
 given machine and task requires knowledge of both language implementation and computer architecture 
