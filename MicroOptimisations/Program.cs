@@ -5,8 +5,7 @@ public class Program
 {
     public static void Main(string[] args) 
     {
-        CpuInfo.GetCacheSizes().ForEach(d => Console.WriteLine(d));
-        //RunBenchmarks();
+        RunBenchmarks();
     }
 
     public static void RunBenchmarks()
