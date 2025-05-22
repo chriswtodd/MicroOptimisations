@@ -57,8 +57,9 @@ faster and smaller. Knowing this, we can guess from the above what size each of 
 cache levels are from the large jumps between groups of times taken to perform an 
 operation.
 
-There are jumps between 32kb-64kb (~40% increase), and 4MB-8MB (~60% increase), which are the 
-sizes of the L1 and L2 caches on my machine.
+There are jumps between 256kb (2x L1 @ 128kB) to 512kB (~60% increase), 
+and 4MB (4x L2 @ 1024kB) to 8MB (~60% increase), which are the sizes of the L1 and L2 caches on my 
+machine.
 
 ## CPU Cache Lines
 
@@ -100,6 +101,38 @@ as claimed.
 
 ## CPU False Sharing
 
-When information changes within a single cache line, the whole line is invalidated. When we 
-modify a value within a single cache line, *we invalidate the whole line*. When we modify 
-an element, we need to expel the cache and refresh the whole line.
+### Results
+
+```
+
+BenchmarkDotNet v0.14.0, Windows 10 (10.0.19045.5854/22H2/2022Update)
+Intel Core i5-6400 CPU 2.70GHz (Skylake), 1 CPU, 4 logical and 4 physical cores
+.NET SDK 9.0.203
+  [Host]                        : .NET 9.0.4 (9.0.425.16305), X64 RyuJIT AVX2
+  CacheLineFalseSharingBenchJob : .NET 9.0.4 (9.0.425.16305), X64 RyuJIT AVX2
+
+Job=CacheLineFalseSharingBenchJob  InvocationCount=1  IterationCount=5  
+LaunchCount=1  UnrollFactor=1  WarmupCount=3  
+
+```
+| Method               | Mean       | Error      | StdDev    | Median     |
+|--------------------- |-----------:|-----------:|----------:|-----------:|
+| IntsInvalidated      | 596.183 ms | 236.522 ms | 36.602 ms | 611.729 ms |
+| IntsMaybeInvalidated | 175.182 ms | 345.063 ms | 89.612 ms | 190.500 ms |
+| IntsNotInvalidated   |   8.336 ms |  58.820 ms |  9.102 ms |   5.048 ms |
+
+The highest level cache lines (L3) are shared between cores. When another core updates a line of 
+data that you also have access to (which is implicit in the L3 cache) within a single cache line, 
+the whole line is invalidated in the cache. When we modify a value within a single cache line, 
+*we invalidate the whole line*. This is a lot of going back to main memory and retrieving the same 
+information for the most part, but the CPU has no way of knowing that.
+
+This example runs a simple loop that starts several threads to update values at fixed points along
+a very large array. As we will see, when the numbers are close together like `IntsInvalidated`, the
+time for each operation is massive compared to the other loops in this example. This is because the 
+cache lines are getting updated and therefore are getting invalidated more frequently for each core.
+And as we've seen previously, round trips to main memory are expensive. By the time we get to 
+`IntsMaybeInvalidated`, about half of the operations do not require a cache invalidation (from above
+step 16 (ints) * 4 bytes per int = 64 bytes per line). And by the final loop, we start on 
+invalidating the cache every 512 ints along the array, or ~ 2MB. So every operation in the final 
+loop updates at most every (512 * 4) / 64 = 32nd line.
